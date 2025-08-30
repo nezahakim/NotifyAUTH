@@ -5,12 +5,7 @@ import { generateAccessToken, generateRefreshToken, type TokenPayload } from './
 import { sendMagicLink } from './email';
 import crypto from 'crypto';
 import { supabase } from './supabase';
-// import { SUPABASE_SERVICE_KEY, SUPABASE_URL } from '$env/static/private';
 
-// const supabase = createClient(
-//     SUPABASE_URL,
-//     SUPABASE_SERVICE_KEY
-// );
 
 export async function registerUser(email: string, password: string) {
     // Check if user exists
