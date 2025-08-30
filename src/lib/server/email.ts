@@ -17,7 +17,9 @@ export async function sendMagicLink(email: string, link: string, purpose: 'login
     const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2>${subject}</h2>
-            <p>Click the link below to ${purpose === 'login' ? 'log in' : 'reset your password'}:</p>
+            <p>Click the link or the button below to ${purpose === 'login' ? 'log in' : 'reset your password'}:</p>
+            <a href="${link}">${link}</a>
+            <br/>OR<br/>
             <a href="${link}" style="display: inline-block; padding: 12px 24px; background-color: #4F46E5; color: white; text-decoration: none; border-radius: 6px;">
                 ${purpose === 'login' ? 'Log In' : 'Reset Password'}
             </a>
