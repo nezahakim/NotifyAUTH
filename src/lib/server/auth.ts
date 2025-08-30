@@ -1,5 +1,5 @@
 // src/lib/server/auth.ts
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { createClient } from '@supabase/supabase-js';
 import { generateAccessToken, generateRefreshToken, type TokenPayload } from './jwt';
 import { sendMagicLink } from './email';

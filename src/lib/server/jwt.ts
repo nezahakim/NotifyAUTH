@@ -1,15 +1,16 @@
 // src/lib/server/jwt.ts
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
 
 import {
     JWT_SECRET,
     JWT_ACCESS_TOKEN_EXPIRY,
     JWT_REFRESH_TOKEN_EXPIRY,
-    PUBLIC_APP_DOMAINS,
-    PUBLIC_AUTH_DOMAIN,
-
 } from '$env/static/private';
+
+import {
+    PUBLIC_APP_DOMAINS,
+    PUBLIC_AUTH_DOMAIN
+} from '$env/static/public'
 
 const ACCESS_TOKEN_EXPIRY = JWT_ACCESS_TOKEN_EXPIRY || '15m';
 const REFRESH_TOKEN_EXPIRY = JWT_REFRESH_TOKEN_EXPIRY || '7d';
@@ -30,8 +31,11 @@ export function generateAccessToken(payload: TokenPayload): string {
 }
 
 export function generateRefreshToken(): string {
-    return crypto.randomBytes(32).toString('hex');
+    const array = new Uint8Array(32); // 32 bytes = 256 bits
+    crypto.getRandomValues(array);
+    return Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('');
 }
+
 
 export function verifyAccessToken(token: string): TokenPayload {
     return jwt.verify(token, JWT_SECRET, {
