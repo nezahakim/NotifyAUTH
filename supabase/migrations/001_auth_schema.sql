@@ -1,5 +1,3 @@
--- supabase/migrations/001_auth_schema.sql
-
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
