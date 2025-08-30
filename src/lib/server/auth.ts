@@ -1,5 +1,6 @@
 // src/lib/server/auth.ts
 import bcrypt from 'bcryptjs';
+import { createClient } from '@supabase/supabase-js';
 import { generateAccessToken, generateRefreshToken, type TokenPayload } from './jwt';
 import { sendMagicLink } from './email';
 import crypto from 'crypto';
@@ -9,7 +10,7 @@ import { supabase } from './supabase';
 export async function registerUser(email: string, password: string) {
     // Check if user exists
     const { data: existingUser } = await supabase
-        .from('custom_auth.auth_users')
+        .from('auth_users')
         .select('id')
         .eq('email', email)
         .single();
@@ -23,7 +24,7 @@ export async function registerUser(email: string, password: string) {
 
     // Create user
     const { data: user, error } = await supabase
-        .from('custom_auth.auth_users')
+        .from('auth_users')
         .insert({
             email,
             password_hash: passwordHash,
@@ -43,7 +44,7 @@ export async function registerUser(email: string, password: string) {
 export async function loginWithPassword(email: string, password: string, ipAddress?: string, userAgent?: string) {
     // Get user
     const { data: user, error } = await supabase
-        .from('custom_auth.auth_users')
+        .from('auth_users')
         .select('*')
         .eq('email', email)
         .eq('is_active', true)
@@ -77,7 +78,7 @@ export async function createSession(userId: string, ipAddress?: string, userAgen
 
     // Get user data for token
     const { data: user } = await supabase
-        .from('custom_auth.auth_users')
+        .from('auth_users')
         .select('email, role')
         .eq('id', userId)
         .single();
@@ -97,7 +98,7 @@ export async function createSession(userId: string, ipAddress?: string, userAgen
     expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
 
     const { data: session, error } = await supabase
-        .from('custom_auth.auth_sessions')
+        .from('auth_sessions')
         .insert({
             id: sessionId,
             user_id: userId,
@@ -122,7 +123,7 @@ export async function createSession(userId: string, ipAddress?: string, userAgen
 export async function refreshSession(refreshToken: string) {
     // Get session
     const { data: session, error } = await supabase
-        .from('custom_auth.auth_sessions')
+        .from('auth_sessions')
         .select('*, auth_users!inner(email, role)')
         .eq('refresh_token', refreshToken)
         .eq('is_active', true)
@@ -143,7 +144,7 @@ export async function refreshSession(refreshToken: string) {
 
     // Update session
     await supabase
-        .from('custom_auth.auth_sessions')
+        .from('auth_sessions')
         .update({
             access_token_hash: crypto.createHash('sha256').update(accessToken).digest('hex')
         })
@@ -162,7 +163,7 @@ export async function sendMagicLinkEmail(email: string, purpose: 'login' | 'rese
 
     // Store magic link
     await supabase
-        .from('custom_auth.auth_magic_links')
+        .from('auth_magic_links')
         .insert({
             email,
             token,
@@ -180,7 +181,7 @@ export async function sendMagicLinkEmail(email: string, purpose: 'login' | 'rese
 export async function verifyMagicLink(token: string) {
     // Get and validate magic link
     const { data: magicLink, error } = await supabase
-        .from('custom_auth.auth_magic_links')
+        .from('auth_magic_links')
         .select('*')
         .eq('token', token)
         .gt('expires_at', new Date().toISOString())
@@ -193,13 +194,13 @@ export async function verifyMagicLink(token: string) {
 
     // Mark as used
     await supabase
-        .from('custom_auth.auth_magic_links')
+        .from('auth_magic_links')
         .update({ used_at: new Date().toISOString() })
         .eq('id', magicLink.id);
 
     // Get or create user
     let { data: user } = await supabase
-        .from('custom_auth.auth_users')
+        .from('auth_users')
         .select('*')
         .eq('email', magicLink.email)
         .single();
@@ -207,7 +208,7 @@ export async function verifyMagicLink(token: string) {
     if (!user) {
         // Create user if doesn't exist (for magic link login)
         const { data: newUser } = await supabase
-            .from('custom_auth.auth_users')
+            .from('auth_users')
             .insert({
                 email: magicLink.email,
                 email_verified: true
@@ -218,7 +219,7 @@ export async function verifyMagicLink(token: string) {
     } else {
         // Mark email as verified
         await supabase
-            .from('custom_auth.auth_users')
+            .from('auth_users')
             .update({ email_verified: true })
             .eq('id', user.id);
     }
@@ -236,13 +237,13 @@ export async function verifyMagicLink(token: string) {
 
 export async function logout(sessionId: string) {
     await supabase
-        .from('custom_auth.auth_sessions')
+        .from('auth_sessions')
         .update({ is_active: false })
         .eq('id', sessionId);
 
     // Log event
     const { data: session } = await supabase
-        .from('custom_auth.auth_sessions')
+        .from('auth_sessions')
         .select('user_id')
         .eq('id', sessionId)
         .single();
@@ -254,7 +255,7 @@ export async function logout(sessionId: string) {
 
 async function logAuthEvent(userId: string | null, eventType: string, metadata: any = {}) {
     await supabase
-        .from('custom_auth.auth_events')
+        .from('auth_events')
         .insert({
             user_id: userId,
             event_type: eventType,
