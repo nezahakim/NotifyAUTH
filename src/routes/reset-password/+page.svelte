@@ -35,7 +35,7 @@
             }
             
             success = true;
-        } catch (err) {
+        } catch (err: any) {
             error = err.message;
         } finally {
             loading = false;
@@ -70,7 +70,7 @@
             }
             
             goto('/login?reset=success');
-        } catch (err) {
+        } catch (err: any) {
             error = err.message;
         } finally {
             loading = false;

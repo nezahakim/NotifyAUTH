@@ -28,7 +28,7 @@
             
             authStore.login(data.user, data.accessToken);
             goto('/dashboard');
-        } catch (err) {
+        } catch (err: any) {
             error = err.message;
         } finally {
             loading = false;
@@ -53,7 +53,7 @@
             }
             
             magicLinkSent = true;
-        } catch (err) {
+        } catch (err: any) {
             error = err.message;
         } finally {
             loading = false;

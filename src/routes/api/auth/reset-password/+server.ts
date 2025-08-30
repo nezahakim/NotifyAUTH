@@ -1,13 +1,9 @@
 // src/routes/api/auth/reset-password/+server.ts
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import bcrypt from 'bcrypt';
-import { createClient } from '@supabase/supabase-js';
+import bcrypt from 'bcryptjs';
+import { supabase } from '$lib/server/supabase';
 
-const supabase = createClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_KEY!
-);
 
 export const POST: RequestHandler = async ({ request }) => {
     try {
