@@ -23,7 +23,7 @@ const disconnectAppSchema = z.object({
 
 // Helper function to get user ID from session/auth
 async function getUserId(request: Request): Promise<string> {
-    
+
   const authHeader = request.headers.get('authorization');
   if (!authHeader) {
     throw error(401, 'Unauthorized - No auth header');

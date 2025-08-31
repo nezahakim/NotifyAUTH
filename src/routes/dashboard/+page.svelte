@@ -62,6 +62,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
+  import {authStore} from '$lib/stores/auth'
   
   // Types
   interface User {
@@ -134,8 +135,7 @@
     const response = await fetch(endpoint, {
       headers: {
         'Content-Type': 'application/json',
-        // TODO: Add authorization header with your auth token
-        // 'Authorization': `Bearer ${getAuthToken()}`,
+        'Authorization': `Bearer ${$authStore.accessToken}`,
         ...options.headers,
       },
       ...options,
