@@ -2,6 +2,7 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { supabase } from '$lib/server/supabase';
 import { z } from 'zod';
+import { verifyAccessToken } from '$lib/server/jwt';
 
 // Validation schemas
 const userProfileUpdateSchema = z.object({
@@ -22,20 +23,16 @@ const disconnectAppSchema = z.object({
 
 // Helper function to get user ID from session/auth
 async function getUserId(request: Request): Promise<string> {
-  // TODO: Replace with your actual auth implementation
-  // This should extract user ID from JWT token, session, etc.
+    
   const authHeader = request.headers.get('authorization');
   if (!authHeader) {
     throw error(401, 'Unauthorized - No auth header');
   }
   
   // Example implementation - replace with your auth logic
-  // const token = authHeader.replace('Bearer ', '');
-  // const user = await verifyToken(token);
-  // return user.id;
-  
-  // Temporary fallback - replace with actual implementation
-  return 'current-user-id';
+  const token = authHeader.replace('Bearer ', '');
+  const user = verifyAccessToken(token);
+  return user.sub;
 }
 
 // Utility function for error responses
