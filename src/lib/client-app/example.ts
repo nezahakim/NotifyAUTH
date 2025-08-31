@@ -1,4 +1,3 @@
-// Example integration for client apps
 // client-app/src/lib/auth.ts
 import { writable } from 'svelte/store';
 
