@@ -32,8 +32,46 @@ const securityHeaders: Handle = async ({ event, resolve }) => {
     return response;
 };
 
+// const authHandle: Handle = async ({ event, resolve }) => {
+//     // Previous auth handle code...
+//     const authHeader = event.request.headers.get('Authorization');
+//     const token = authHeader?.replace('Bearer ', '');
+
+//     if (token) {
+//         try {
+//             const payload = verifyAccessToken(token);
+//             event.locals.user = {
+//                 id: payload.sub,
+//                 email: payload.email,
+//                 role: payload.role,
+//                 sessionId: payload.sessionId
+//             };
+//         } catch (err) {
+//             event.locals.user = null;
+//         }
+//     } else {
+//         event.locals.user = null;
+//     }
+
+//     // Protected routes
+//     const protectedRoutes = ['/dashboard', '/profile', '/settings', '/admin'];
+//     const isProtected = protectedRoutes.some(route => 
+//         event.url.pathname.startsWith(route)
+//     );
+
+//     if (isProtected && !event.locals.user) {
+//         return new Response(null, {
+//             status: 302,
+//             headers: {
+//                 Location: '/login?redirect=' + encodeURIComponent(event.url.pathname)
+//             }
+//         });
+//     }
+
+//     return resolve(event);
+// };
+
 const authHandle: Handle = async ({ event, resolve }) => {
-    // Previous auth handle code...
     const authHeader = event.request.headers.get('Authorization');
     const token = authHeader?.replace('Bearer ', '');
 
@@ -53,12 +91,11 @@ const authHandle: Handle = async ({ event, resolve }) => {
         event.locals.user = null;
     }
 
-    // Protected routes
-    const protectedRoutes = ['/dashboard', '/profile', '/settings', '/admin'];
-    const isProtected = protectedRoutes.some(route => 
+    const isProtected = ['/dashboard', '/profile', '/settings', '/admin'].some(route =>
         event.url.pathname.startsWith(route)
     );
 
+    // 🚫 Redirect unauthenticated users trying to access protected routes
     if (isProtected && !event.locals.user) {
         return new Response(null, {
             status: 302,
@@ -67,6 +104,18 @@ const authHandle: Handle = async ({ event, resolve }) => {
             }
         });
     }
+
+    const publicOnlyRoutes = ['/login', '/register'];
+
+if (event.locals.user && publicOnlyRoutes.includes(event.url.pathname)) {
+    return new Response(null, {
+        status: 302,
+        headers: {
+            Location: '/dashboard'
+        }
+    });
+}
+
 
     return resolve(event);
 };
