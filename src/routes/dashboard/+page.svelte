@@ -245,7 +245,7 @@
 </script>
 
 <svelte:head>
-  <title>My Dashboard - SSO</title>
+  <title>My Dashboard</title>
 </svelte:head>
 
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -258,8 +258,8 @@
             <span class="text-white text-lg font-bold">S</span>
           </div>
           <div>
-            <h1 class="text-2xl font-bold text-gray-900">My Dashboard</h1>
-            <p class="text-sm text-gray-500">Manage your SSO profile and applications</p>
+            <h1 class="text-2xl font-bold text-gray-900">My NotifyAccount</h1>
+            <p class="text-sm text-gray-500">Manage your Notifycode's profile and applications</p>
           </div>
         </div>
         <div class="flex items-center space-x-4">

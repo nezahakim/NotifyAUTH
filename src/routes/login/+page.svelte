@@ -9,31 +9,66 @@
     let error = '';
     let magicLinkSent = false;
 
-    async function handleLogin() {
-        loading = true;
-        error = '';
+    // async function handleLogin() {
+    //     loading = true;
+    //     error = '';
         
-        try {
-            const response = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
+    //     try {
+    //         const response = await fetch('/api/auth/login', {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify({ email, password })
+    //         });
             
-            const data = await response.json();
+    //         const data = await response.json();
             
-            if (!response.ok) {
-                throw new Error(data.error || 'Login failed');
-            }
+    //         if (!response.ok) {
+    //             throw new Error(data.error || 'Login failed');
+    //         }
             
-            authStore.login(data.user, data.accessToken);
-            goto('/dashboard');
-        } catch (err: any) {
-            error = err.message;
-        } finally {
-            loading = false;
+    //         authStore.login(data.user, data.accessToken);
+    //         goto('/dashboard');
+    //     } catch (err: any) {
+    //         error = err.message;
+    //     } finally {
+    //         loading = false;
+    //     }
+    // }
+
+async function handleLogin() {
+    loading = true;
+    error = '';
+
+    try {
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Login failed');
         }
+
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get('redirect');
+        
+        authStore.login(data.user, data.accessToken);
+
+        if (redirect) {
+            window.location.href = `${redirect}?token=${encodeURIComponent(data.accessToken)}`;
+        } else {
+            goto('/dashboard');
+        }
+    } catch (err: any) {
+        error = err.message;
+    } finally {
+        loading = false;
     }
+}
+
 
     async function handleMagicLink() {
         loading = true;

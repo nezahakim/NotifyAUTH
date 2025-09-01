@@ -37,7 +37,7 @@
             } else if (data.purpose === 'reset_password') {
                 goto(`/reset-password?email=${data.user.email}&verified=true`);
             }
-        } catch (err) {
+        } catch (err: any) {
             error = err.message;
         } finally {
             verifying = false;
