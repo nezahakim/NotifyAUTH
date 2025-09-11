@@ -30,6 +30,19 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
                }
         }
 
+        if (purpose === 'reset_password') {
+            // Check if user exists
+                const { data: existingUser } = await supabase
+                    .from('auth_users')
+                    .select('id')
+                    .eq('email', email)
+                    .single();
+            
+                if (!existingUser) {
+                    return json({ success: false, message: "User doesn't exist." }, { status: 400 });
+                }
+         }
+
         await sendMagicLinkEmail(email, purpose);
         return json({ success: true, message: 'Magic link sent to your email' });
 
