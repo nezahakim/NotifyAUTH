@@ -135,23 +135,23 @@
             </p>
           </div>
   
-          <div class="mb-12 md:mb-16">
-            <input
-              type="email"
-              placeholder="Email"
-              class="w-full text-lg md:text-xl py-4 md:py-6 border-0 border-b border-gray-200 bg-transparent focus:outline-none focus:ring-0 focus:border-gray-800 transition-colors duration-300 placeholder-gray-400"
-              bind:value={email}
-              required
-              disabled={codeSent}
-            />
-          </div>
-  
           {#if codeSent}
             <div class="mb-12 md:mb-16">
               <p class="text-base md:text-lg text-gray-800 mb-2">Check your email</p>
               <p class="text-sm md:text-base text-gray-500">
                 We sent a link to <span class="text-gray-800">{email}</span>
               </p>
+            </div>
+          {:else}
+            <div class="mb-12 md:mb-16">
+              <input
+                type="email"
+                placeholder="Email"
+                class="w-full text-lg md:text-xl py-4 md:py-6 border-0 border-b border-gray-200 bg-transparent focus:outline-none focus:ring-0 focus:border-gray-800 transition-colors duration-300 placeholder-gray-400"
+                bind:value={email}
+                required
+                disabled={codeSent}
+              />
             </div>
           {/if}
   
