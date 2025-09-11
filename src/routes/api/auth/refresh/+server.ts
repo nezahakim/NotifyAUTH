@@ -25,7 +25,7 @@ export const POST: RequestHandler = async ({ cookies }) => {
     const refreshToken = cookies.get('refresh_token');
 
     if (!refreshToken) {
-        return json({ error: 'Unauthorized - attempt detected' }, { status: 401 });
+        return json({ error: 'Unauthorized - attempt detected' + refreshToken }, { status: 401 });
     }
 
     try {
