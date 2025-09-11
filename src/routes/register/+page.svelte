@@ -18,20 +18,23 @@
       let countDown = $state(0);
       let timer: NodeJS.Timeout;
 
+      let countDone = $state(false);
+
       function startCountdown() {
-        countDown = 20;
+        countDown = 59;
         timer = setInterval(() => {
           if (countDown > 0) {
             countDown -= 1;
           } else {
+            countDone = true;
             clearInterval(timer);
           }
         }, 1000);
       }
 
       $effect(()=>{
-        if (codeSent && countDown === 0) {
-          countDown = 20;
+        if (codeSent && countDown === 0 && !countDone) {
+          countDown = 59;
           clearInterval(timer);
           startCountdown();
         }
