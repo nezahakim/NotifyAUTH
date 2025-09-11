@@ -105,7 +105,7 @@
             emailVerified = false;
             registerStore.reset()
             // goto('/register');
-            console.log('--- IGNORE ---)
+            console.log('--- IGNORE ---')
           }
         }
       })
