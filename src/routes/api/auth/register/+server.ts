@@ -38,6 +38,7 @@ export const POST: RequestHandler = async ({ request, cookies, getClientAddress 
         });
     } catch (error: any) {
         if (error instanceof z.ZodError) {
+            
             return json({ error: 'Invalid input', details: error }, { status: 400 });
         }
         console.log(error)

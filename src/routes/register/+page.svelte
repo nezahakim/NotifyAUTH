@@ -81,8 +81,10 @@
             body: JSON.stringify({ email, password })
           });
     
-          console.log(res);
-          if (!res.ok) throw new Error('Registration failed.');
+          if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || 'Registration failed.');
+          }
     
           success = 'Registration successful!';
         } catch (err: any) {
