@@ -27,7 +27,7 @@
 
             const data = await response.json();
 
-            if (!response.ok) throw new Error(data.error || 'Failed to send reset link');
+            if (!response.ok) throw new Error(data.error || data.message || 'Failed to send reset link');
 
             success = true;
         } catch (err: any) {
