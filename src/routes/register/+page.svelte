@@ -14,6 +14,20 @@
       let loading = $state(false);
       let error = $state('');
       let success = $state('');
+
+      let countDown = $state(0);
+      let timer: NodeJS.Timeout;
+
+      function startCountdown() {
+        countDown = 20;
+        timer = setInterval(() => {
+          if (countDown > 0) {
+            countDown -= 1;
+          } else {
+            clearInterval(timer);
+          }
+        }, 1000);
+      }
     
       // Send verification link to email
       async function sendVerificationEmail(e: any) {
@@ -136,9 +150,9 @@
           <button
             type="submit"
             class="w-full bg-gray-800 text-white text-lg md:text-xl py-4 md:py-6 rounded-full font-medium hover:bg-gray-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={loading}
+            disabled={loading || (codeSent && countDown > 0)}
           >
-            {loading ? 'Sending...' : codeSent ? 'Resend' : 'Continue'}
+            {loading ? 'Sending...' : codeSent ? 'Resend in ' + countDown : 'Continue'}
           </button>
   
         {:else}
