@@ -31,6 +31,8 @@
 
       $effect(()=>{
         if (codeSent && countDown === 0) {
+          countDown = 20;
+          clearInterval(timer);
           startCountdown();
         }
       })
