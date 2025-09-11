@@ -114,7 +114,7 @@ export async function verifyMagicLink(token: string) {
 
     if (!user) {
         user = {
-            success: true,
+            email: magicLink.email,
         };
     } else {
         // Mark email as verified

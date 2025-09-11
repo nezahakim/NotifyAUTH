@@ -37,12 +37,8 @@
             } else if (data.purpose === 'reset_password') {
                 passwordStore.setEmailVerified({ status: true, email: data.user.email });
                 goto(`/reset-password?email=${data.user.email}&verified=true`);
-            }else if (data.purpose === 'code' && data.user.status) {
-                const email = $registerStore.email as string;
-                
-                console.log(data.user, email)
-
-                registerStore.setEmailVerified({ status: data.user.status, email: email});
+            }else if (data.purpose === 'code') {
+                registerStore.setEmailVerified({ status: true, email: data.user.email });
                 goto(`/register?email=${data.user.email}&verified=true`);
             }
         } catch (err: any) {
