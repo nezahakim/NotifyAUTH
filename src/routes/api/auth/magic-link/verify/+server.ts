@@ -47,7 +47,7 @@ export const POST: RequestHandler = async ({ request, cookies, getClientAddress 
         }else{
             return json({
                 user: {
-                    email: get(registerStore).email
+                    status: result.user.success
                 },
                 purpose: result.purpose
             });
