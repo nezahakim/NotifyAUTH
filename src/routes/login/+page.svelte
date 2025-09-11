@@ -176,14 +176,14 @@ async function handleMagicLink(e: any) {
       </form>
     {/if}
 
-     <!-- Signup Link -->
-    <div class="absolute bottom-6 md:bottom-8 text-left">
-        <p class="text-gray-500 text-base md:text-lg px-3 py-.5 ">
-            Don't have an account? 
-            <a href="/register" class="text-gray-800 hover:text-black transition-colors duration-200 font-medium">
-              Sign up
-            </a>
-        </p>
+    <!-- Signup Link -->
+    <div class="mt-6 md:mt-8 text-left">
+      <p class="text-gray-500 text-base md:text-lg px-3 py-.5 ">
+          Don't have an account? 
+          <a href="/register" class="text-gray-800 hover:text-black transition-colors duration-200 font-medium">
+            Sign up
+          </a>
+      </p>
     </div>
 
   </div>
