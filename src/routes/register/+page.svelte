@@ -104,7 +104,8 @@
           }else{
             emailVerified = false;
             registerStore.reset()
-            goto('/register');
+            // goto('/register');
+            console.log('--- IGNORE ---)
           }
         }
       })
