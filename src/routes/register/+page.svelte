@@ -17,14 +17,12 @@
 
       let countDown = $state(0);
       let timer: NodeJS.Timeout;
-      let countDone = $state(false);
 
       function startCountdown() {
         timer = setInterval(() => {
           if (countDown > 0) {
             countDown -= 1;
           } else {
-            countDone = true;
             clearInterval(timer);
           }
         }, 1000);
@@ -52,7 +50,7 @@
 
           registerStore.setEmail(email);
 
-          if (codeSent && countDown === 0 && !countDone) {
+          if (codeSent && countDown === 0) {
             countDown = 59;
             startCountdown();
           }
@@ -161,7 +159,7 @@
             class="w-full bg-gray-800 text-white text-lg md:text-xl py-4 md:py-6 rounded-full font-medium hover:bg-gray-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={loading || (codeSent && countDown > 0)}
           >
-            {loading ? 'Sending...' : codeSent ? `Resend${countDone ? '': ' in '+ countDown} `: 'Continue'}
+            {loading ? 'Sending...' : codeSent ? `Resend${countDown > 0 ? '': ' in '+ countDown} `: 'Continue'}
           </button>
   
         {:else}
