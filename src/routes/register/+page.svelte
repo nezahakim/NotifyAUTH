@@ -81,6 +81,7 @@
             body: JSON.stringify({ email, password })
           });
     
+          console.log(res);
           if (!res.ok) throw new Error('Registration failed.');
     
           success = 'Registration successful!';
