@@ -82,10 +82,16 @@
           });
     
           if (!res.ok) {
-            const data = await res.json();
-            throw new Error(data.details.email[0] || data.details.password[0] || 'Registration failed.');
+                const data = await res.json();
+
+                // Extract error messages, fallback to generic message
+                const emailError = data.details?.email;
+                const passwordError = data.details?.password;
+                const message = emailError || passwordError || 'Registration failed.';
+
+                throw new Error(message);
           }
-    
+
           success = 'Registration successful!';
         } catch (err: any) {
           error = err.message || 'Something went wrong.';
