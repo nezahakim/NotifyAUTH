@@ -39,6 +39,13 @@ function createRegisterStore() {
             }));
         },
 
+        setEmail(email: string) {
+            update(state => ({
+                ...state,
+                email: email,
+            }));
+        },
+
         reset() {
             set({
                 isEmailVerified: false,

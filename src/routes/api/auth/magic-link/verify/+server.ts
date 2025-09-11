@@ -1,5 +1,7 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { verifyMagicLink, createSession } from '$lib/server/auth';
+import { registerStore } from '$lib/stores/helper';
+import { get } from 'svelte/store';
 
 export const POST: RequestHandler = async ({ request, cookies, getClientAddress }) => {
     try {
@@ -38,17 +40,14 @@ export const POST: RequestHandler = async ({ request, cookies, getClientAddress 
             // For password reset, return user info without creating session
             return json({
                 user: {
-                    id: result.user.id,
                     email: result.user.email
                 },
                 purpose: result.purpose
             });
         }else{
-
             return json({
                 user: {
-                    id: result.user.id,
-                    email: result.user.email
+                    email: get(registerStore).email
                 },
                 purpose: result.purpose
             });

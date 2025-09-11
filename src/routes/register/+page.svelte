@@ -50,6 +50,7 @@
           codeSent = true;
           success = 'A verification link has been sent to your email. Please click the link to verify your email.';
 
+          registerStore.setEmail(email);
 
           if (codeSent && countDown === 0 && !countDone) {
             countDown = 59;
@@ -105,7 +106,6 @@
             emailVerified = false;
             registerStore.reset()
             // goto('/register');
-            console.log('--- IGNORE ---')
           }
         }
       })
