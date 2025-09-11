@@ -1,12 +1,8 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { refreshSession } from '$lib/server/auth';
 
-export const POST: RequestHandler = async ({ cookies, request }) => {
-    const token_cookie = cookies.get('refresh_token');
-    const auth = request.headers.get('authorization');
-
-    const refreshToken = auth?.slice(7);
-
+export const POST: RequestHandler = async ({ cookies }) => {
+    const refreshToken = cookies.get('refresh_token');
 
     if (!refreshToken) {
         return json({ error: 'Unauthorized - attempt detected' }, { status: 401 });
