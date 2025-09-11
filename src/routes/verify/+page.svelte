@@ -38,7 +38,11 @@
                 passwordStore.setEmailVerified({ status: true, email: data.user.email });
                 goto(`/reset-password?email=${data.user.email}&verified=true`);
             }else if (data.purpose === 'code' && data.user.status) {
-                registerStore.setEmailVerified({ status: data.user.status, email: $registerStore.email as string });
+                const email = $registerStore.email as string;
+                
+                console.log(data.user, email)
+
+                registerStore.setEmailVerified({ status: data.user.status, email: email});
                 goto(`/register?email=${data.user.email}&verified=true`);
             }
         } catch (err: any) {
