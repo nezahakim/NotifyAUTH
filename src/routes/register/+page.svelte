@@ -29,13 +29,6 @@
           }
         }, 1000);
       }
-
-      $effect(()=>{
-        if (codeSent && countDown === 0 && !countDone) {
-          countDown = 59;
-          startCountdown();
-        }
-      })
     
       // Send verification link to email
       async function sendVerificationEmail(e: any) {
@@ -56,6 +49,13 @@
     
           codeSent = true;
           success = 'A verification link has been sent to your email. Please click the link to verify your email.';
+
+
+          if (codeSent && countDown === 0 && !countDone) {
+            countDown = 59;
+            startCountdown();
+          }
+
         } catch (err: any) {
           error = err.message || 'Something went wrong.';
         } finally {
