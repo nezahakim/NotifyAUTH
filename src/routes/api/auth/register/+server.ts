@@ -60,11 +60,9 @@ import { validateRegisterInput } from '$lib/utils/validation';
 
 export const POST: RequestHandler = async ({ request, cookies, getClientAddress }) => {
   try {
-    const body = await request.json();
-    const { email, password } = body;
-
-    // Use custom validator
+    const { email, password } = await request.json();
     const { isValid, errors } = validateRegisterInput({ email, password });
+    
     if (!isValid) {
       return json(
         {

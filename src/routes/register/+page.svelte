@@ -101,12 +101,13 @@
       }
   
       onMount(()=>{
-        const email = page.url.searchParams.get('email');
+        const eMail = page.url.searchParams.get('email');
         const verified = page.url.searchParams.get('verified');
   
-        if( email && verified){
-          if(email === $registerStore.email && verified === $registerStore.isEmailVerified.toString()){
-           emailVerified = true;
+        if( eMail && verified){
+          if(eMail === $registerStore.email && verified === $registerStore.isEmailVerified.toString()){
+            email = eMail;
+            emailVerified = true; 
           }else{
             emailVerified = false;
             registerStore.reset()
