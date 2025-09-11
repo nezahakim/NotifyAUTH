@@ -83,7 +83,7 @@
     
           if (!res.ok) {
             const data = await res.json();
-            throw new Error(data.error || 'Registration failed.');
+            throw new Error(data.details.email[0] || data.details.password[0] || 'Registration failed.');
           }
     
           success = 'Registration successful!';

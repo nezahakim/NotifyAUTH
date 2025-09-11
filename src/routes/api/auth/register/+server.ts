@@ -4,8 +4,18 @@ import { registerUser, createSession } from '$lib/server/auth';
 import { z } from 'zod';
 
 const registerSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    email: z.email({ message: 'Invalid email address' }),
+    password: z.string()
+      .min(8, { message: 'Password must be at least 8 characters long' })
+      .refine((val) => /[a-z]/.test(val), {
+        message: 'Password must contain at least one lowercase letter'
+      })
+      .refine((val) => /[A-Z]/.test(val), {
+        message: 'Password must contain at least one uppercase letter'
+      })
+      .refine((val) => /\d/.test(val), {
+        message: 'Password must contain at least one number'
+      })
 });
 
 export const POST: RequestHandler = async ({ request, cookies, getClientAddress }) => {
@@ -38,9 +48,16 @@ export const POST: RequestHandler = async ({ request, cookies, getClientAddress 
         });
     } catch (error: any) {
         if (error instanceof z.ZodError) {
-            
-            return json({ error: 'Invalid input', details: error }, { status: 400 });
+            const structured = z.treeifyError(error);
+            return json(
+              {
+                error: "Invalid input",
+                details: structured
+              },
+              { status: 400 }
+            );
         }
+
         console.log(error)
         return json({ error: error.message }, { status: 400 });
     }
