@@ -187,7 +187,7 @@ onMount(()=>{
         {/if}
 
          <!-- Login Link -->
-      <div class="absolute bottom-6 md:bottom-8 text-left">
+      <div class="mt-16 md:mt-20 text-left">
         <p class="text-gray-500 text-base md:text-lg px-3 py-.5 ">
             Remember your password?
           <a href="/login" class="text-gray-800 hover:text-black transition-colors duration-200 font-medium">

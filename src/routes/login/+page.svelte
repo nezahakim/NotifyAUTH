@@ -177,7 +177,7 @@ async function handleMagicLink(e: any) {
     {/if}
 
     <!-- Signup Link -->
-    <div class="mt-6 md:mt-8 text-left">
+    <div class="mt-16 md:mt-20 text-left">
       <p class="text-gray-500 text-base md:text-lg px-3 py-.5 ">
           Don't have an account? 
           <a href="/register" class="text-gray-800 hover:text-black transition-colors duration-200 font-medium">
