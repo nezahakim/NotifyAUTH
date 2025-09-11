@@ -28,6 +28,12 @@
           }
         }, 1000);
       }
+
+      $effect(()=>{
+        if (codeSent && countDown === 0) {
+          startCountdown();
+        }
+      })
     
       // Send verification link to email
       async function sendVerificationEmail(e: any) {
