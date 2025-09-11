@@ -93,6 +93,8 @@
           }
 
           success = 'Registration successful!';
+          goto('/dashboard');
+          
         } catch (err: any) {
           error = err.message || 'Something went wrong.';
         } finally {

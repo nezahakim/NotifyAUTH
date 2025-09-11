@@ -73,12 +73,13 @@
     }
 
 onMount(()=>{
-    const email = page.url.searchParams.get('email');
+    const eMail = page.url.searchParams.get('email');
     const verified = page.url.searchParams.get('verified');
 
-    if( email && verified){
-          if(email === $passwordStore.email && verified === $passwordStore.isEmailVerified.toString()){
-           isVerified = true;
+    if(eMail && verified){
+          if(eMail === $passwordStore.email && verified === $passwordStore.isEmailVerified.toString()){
+            email = eMail;
+            isVerified = true;
           }else{
             isVerified = false;
             passwordStore.reset()
