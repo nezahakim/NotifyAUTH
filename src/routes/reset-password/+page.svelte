@@ -134,7 +134,7 @@ onMount(()=>{
                         placeholder="New Password"
                         bind:value={newPassword}
                         required
-                        class="w-full focus:ring-0 text-lg md:text-xl py-4 md:py-6 border-0 border-b border-gray-200 bg-transparent focus:outline-none focus:border-gray-800 transition-colors duration-300 placeholder-gray-400"
+                        class="w-full text-lg md:text-xl py-4 md:py-6 border-0 border-b border-gray-200 bg-transparent focus:outline-none focus:border-gray-800 focus:ring-0 transition-colors duration-300 placeholder-gray-400"
                     />
                 </div>
 
@@ -144,7 +144,7 @@ onMount(()=>{
                         placeholder="Confirm New Password"
                         bind:value={confirmPassword}
                         required
-                        class="w-full focus:ring-0 text-lg md:text-xl py-4 md:py-6 border-0 border-b border-gray-200 bg-transparent focus:outline-none focus:border-gray-800 transition-colors duration-300 placeholder-gray-400"
+                        class="w-full text-lg md:text-xl py-4 md:py-6 border-0 border-b border-gray-200 bg-transparent focus:outline-none focus:border-gray-800 focus:ring-0 transition-colors duration-300 placeholder-gray-400"
                     />
                 </div>
 
@@ -172,7 +172,7 @@ onMount(()=>{
                         placeholder="Email"
                         bind:value={email}
                         required
-                        class="w-full focus:ring-0 text-lg md:text-xl py-4 md:py-6 border-0 border-b border-gray-200 bg-transparent focus:outline-none focus:border-gray-800 transition-colors duration-300 placeholder-gray-400"
+                        class="w-full text-lg md:text-xl py-4 md:py-6 border-0 border-b border-gray-200 bg-transparent focus:outline-none focus:border-gray-800 focus:ring-0 transition-colors duration-300 placeholder-gray-400"
                     />
                 </div>
 
