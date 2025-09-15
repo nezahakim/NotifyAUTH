@@ -96,17 +96,39 @@ const corsHandle: Handle = async ({ event, resolve }) => {
     const response = await resolve(event);
     
     // Add CORS headers for API endpoints
-    if (event.url.pathname.startsWith('/api/')) {
-        const allowedOrigins = process.env.PUBLIC_APP_DOMAINS?.split(',') || [];
-        const origin = event.request.headers.get('origin');
+    // if (event.url.pathname.startsWith('/api/')) {
+    //     const allowedOrigins = process.env.PUBLIC_APP_DOMAINS?.split(',') || [];
+    //     const origin = event.request.headers.get('origin');
         
+    //     if (origin && (allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development')) {
+    //         response.headers.set('Access-Control-Allow-Origin', origin);
+    //         response.headers.set('Access-Control-Allow-Credentials', 'true');
+    //         response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    //         response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    //     }
+    // }
+
+    if (event.request.method === 'OPTIONS') {
+        const origin = event.request.headers.get('origin');
+    
+        const allowedOrigins = process.env.PUBLIC_APP_DOMAINS?.split(',') || [];
+    
         if (origin && (allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development')) {
-            response.headers.set('Access-Control-Allow-Origin', origin);
-            response.headers.set('Access-Control-Allow-Credentials', 'true');
-            response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-            response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+            return new Response(null, {
+                status: 200,
+                headers: {
+                    'Access-Control-Allow-Origin': origin,
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                    'Access-Control-Max-Age': '86400'
+                }
+            });
         }
+    
+        return new Response(null, { status: 403 });
     }
+    
     
     return response;
 };
