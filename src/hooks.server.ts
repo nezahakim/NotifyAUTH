@@ -79,40 +79,45 @@ if (event.locals.user && publicOnlyRoutes.includes(event.url.pathname)) {
     return resolve(event);
 };
 
-const corsHandle: Handle = async ({ event, resolve }) => {
-    // Handle preflight requests
-    if (event.request.method === 'OPTIONS') {
-        return new Response(null, {
-            status: 200,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-                'Access-Control-Max-Age': '86400',
-            }
-        });
-    }
+// const corsHandle: Handle = async ({ event, resolve }) => {
+//     // Handle preflight requests
+//     if (event.request.method === 'OPTIONS') {
+//         return new Response(null, {
+//             status: 200,
+//             headers: {
+//                 'Access-Control-Allow-Origin': '*',
+//                 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+//                 'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+//                 'Access-Control-Max-Age': '86400',
+//             }
+//         });
+//     }
     
-    const response = await resolve(event);
+//     const response = await resolve(event);
     
-    // Add CORS headers for API endpoints
-    // if (event.url.pathname.startsWith('/api/')) {
-    //     const allowedOrigins = process.env.PUBLIC_APP_DOMAINS?.split(',') || [];
-    //     const origin = event.request.headers.get('origin');
+//     // Add CORS headers for API endpoints
+//     if (event.url.pathname.startsWith('/api/')) {
+//     const allowedOrigins = process.env.PUBLIC_APP_DOMAINS?.split(',') || [];
+//     const origin = event.request.headers.get('origin');
         
-    //     if (origin && (allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development')) {
-    //         response.headers.set('Access-Control-Allow-Origin', origin);
-    //         response.headers.set('Access-Control-Allow-Credentials', 'true');
-    //         response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    //         response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    //     }
-    // }
+//          if (origin && (allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development')) {
+//     //         response.headers.set('Access-Control-Allow-Origin', origin);
+//     //         response.headers.set('Access-Control-Allow-Credentials', 'true');
+//     //         response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+//     //         response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//     //     }
+//     // }
+    
+//     return response;
+// };
 
+
+const corsHandle: Handle = async ({ event, resolve }) => {
+    const origin = event.request.headers.get('origin');
+    const allowedOrigins = process.env.PUBLIC_APP_DOMAINS?.split(',') || [];
+
+    // ✅ Handle preflight CORS request
     if (event.request.method === 'OPTIONS') {
-        const origin = event.request.headers.get('origin');
-    
-        const allowedOrigins = process.env.PUBLIC_APP_DOMAINS?.split(',') || [];
-    
         if (origin && (allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development')) {
             return new Response(null, {
                 status: 200,
@@ -125,11 +130,20 @@ const corsHandle: Handle = async ({ event, resolve }) => {
                 }
             });
         }
-    
+
         return new Response(null, { status: 403 });
     }
-    
-    
+
+    // ✅ Normal request — attach CORS headers to response if origin is valid
+    const response = await resolve(event);
+
+    if (origin && (allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development')) {
+        response.headers.set('Access-Control-Allow-Origin', origin);
+        response.headers.set('Access-Control-Allow-Credentials', 'true');
+        response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    }
+
     return response;
 };
 
