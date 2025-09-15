@@ -27,9 +27,10 @@ export const POST: RequestHandler = async ({ request, cookies, getClientAddress 
             path: '/',
             httpOnly: true,
             secure: true,
-            sameSite: 'lax',
-            maxAge: 60 * 60 * 24 * 7 // 7 days
+            sameSite: 'none',
+            maxAge: 60 * 60 * 24 * 7
         });
+        
 
         return json({
             user: {
