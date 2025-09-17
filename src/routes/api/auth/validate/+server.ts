@@ -10,6 +10,7 @@ export const GET: RequestHandler = async ({ request }) => {
     }
     
     try {
+
         const payload = verifyAccessToken(token);
         return json({
             valid: true, 
@@ -20,6 +21,7 @@ export const GET: RequestHandler = async ({ request }) => {
                 sessionId: payload.sessionId
             }
         }, { status: 200 });
+        
     } catch (error: any) {
         return json({ valid: false, error: 'Invalid token' }, { status: 401 });
     }
