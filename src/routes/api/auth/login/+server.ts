@@ -23,11 +23,12 @@ export const POST: RequestHandler = async ({ request, cookies, getClientAddress 
         const result = await loginWithPassword(email, password, ip, userAgent);
 
         // Set refresh token as secure cookie
-        cookies.set('refresh_token', result.session.refreshToken, {
+        cookies.set('nc_rt', result.session.refreshToken, {
             path: '/',
             httpOnly: true,
             secure: true,
             sameSite: 'none',
+            domain:'.notifycode.org',
             maxAge: 60 * 60 * 24 * 7
         });
         

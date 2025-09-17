@@ -135,14 +135,14 @@ async function handleMagicLink(e: any) {
         {/if}
 
         <!-- Method Toggle -->
-        <div class="mb-12 md:mb-16 flex flex-row items-center justify-between">
-          <button
+        <div class="mb-12 md:mb-16 flex flex-row items-center justify-end">
+          <!-- <button
             type="button"
             onclick={() => loginMethod = loginMethod === 'password' ? 'magic' : 'password'}
             class="text-gray-600 hover:text-gray-800 text-sm md:text-base transition-colors duration-200 underline underline-offset-4"
           >
             {loginMethod === 'password' ? 'Use a Link instead' : 'Use password instead'}
-          </button>
+          </button> -->
 
           {#if loginMethod === 'password'}
             <p class="text-gray-500 text-base md:text-lg">
