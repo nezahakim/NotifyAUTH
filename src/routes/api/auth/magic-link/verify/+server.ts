@@ -17,11 +17,11 @@ export const POST: RequestHandler = async ({ request, cookies, getClientAddress 
             const userAgent = request.headers.get('user-agent') || undefined;
             const session = await createSession(result.user.id, ip, userAgent);
 
-            cookies.set('refresh_token', session.refreshToken, {
+            cookies.set('nc_rt', session.refreshToken, {
                 path: '/',
                 httpOnly: true,
                 secure: true,
-                sameSite: 'lax',
+                sameSite: 'none',
                 maxAge: 60 * 60 * 24 * 7
             });
 
