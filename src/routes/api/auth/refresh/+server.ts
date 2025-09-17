@@ -9,8 +9,10 @@ export const POST: RequestHandler = async ({ cookies }) => {
     }
 
     try {
+        
         const { accessToken } = await refreshSession(refreshToken);
         return json({ accessToken });
+
     } catch (error) {
         cookies.delete('nc_rt', { path: '/' });
         return json({ error: 'Invalid CRT01' }, { status: 401 });
