@@ -27,8 +27,6 @@ export async function getCurrentUserFromSessionToken(sessionToken: string) {
     return userData
   }
   
-
-
 // Helper function to check if user has app access
 export async function checkAppAccess(userEmail: any, appKey: any) {
   try {
@@ -85,4 +83,18 @@ export async function updateLastAccessed(sessionToken: any) {
   } catch (error) {
     console.error('Error updating last accessed:', error)
   }
+}
+
+
+export const getAllApps = async () =>{
+  
+  const { data: apps, error } = await supabase.from('sso_applications')
+  .select('app_url');
+
+  if (error) {
+    console.error('Error fetching apps:', error);
+    return [];
+  }
+
+  return apps;
 }

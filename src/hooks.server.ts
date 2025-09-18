@@ -1,6 +1,7 @@
 import type { Handle } from '@sveltejs/kit';
 import { verifyAccessToken } from '$lib/server/jwt';
 import { sequence } from '@sveltejs/kit/hooks';
+import { getAllApps } from '$lib/server/supabase';
 
 const securityHeaders: Handle = async ({ event, resolve }) => {
     const response = await resolve(event);
@@ -80,8 +81,10 @@ if (event.locals.user && publicOnlyRoutes.includes(event.url.pathname)) {
 };
 
 const corsHandle: Handle = async ({ event, resolve }) => {
+    
     const origin = event.request.headers.get('origin');
-    const allowedOrigins = process.env.PUBLIC_APP_DOMAINS?.split(',') || [];
+    const apps = await getAllApps().then(data => data.map(app => app.app_url)).catch(() => []);
+    const allowedOrigins = process.env.PUBLIC_APP_DOMAINS?.split(',') || apps || [];
 
     // ✅ Handle preflight CORS request
     if (event.request.method === 'OPTIONS') {

@@ -4,7 +4,7 @@ import { refreshSession } from '$lib/server/auth';
 export const POST: RequestHandler = async ({ cookies }) => {
     const refreshToken = cookies.get('nc_rt');
     
-    if (!refreshToken) {
+    if (!refreshToken) { 
         return json({ error: 'Unauthorized - attempt detected' }, { status: 401 });
     }
 
