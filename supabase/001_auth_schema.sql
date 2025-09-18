@@ -216,10 +216,14 @@ $$ LANGUAGE plpgsql;
 
 INSERT INTO sso_applications (app_key, app_name, app_description, app_url)
 VALUES 
+  ('', 'Notifycode', 'Main Company', 'https://www.notifycode.org'),
   ('tune', 'NotifyTune+', 'Social Media Network', 'https://tune.notifycode.org'),
   ('fashion', 'NotifyFashion+', 'Notifycode Fashion Brand', 'https://fashion.notifycode.org'),
   ('delivery', 'NotifyDelivery+', 'Delivery Service', 'https://delivery.notifycode.org'),
   ('tv', 'NotifyTV+', 'Television Platform', 'https://tv.notifycode.org'),
   ('cast', 'Notifycast+', 'News Platform', 'https://cast.notifycode.org'),
-  ('nezaai', 'NezaAI', 'Notifycode AI Research', 'https://ai.notifycode.org')
+  ('nezaai', 'NezaAI', 'Notifycode AI Research', 'https://ai.notifycode.org'),
+  ('account', 'NotifyAccount', 'Account Management plt', 'https://account.notifycode.org'),
+  ('auth', 'NotifyAUTH+', 'Authentication plt', 'https://auth.notifycode.org'),
+  ('blog', 'NotifyBlog', 'Blog Plt', 'https://blog.notifycode.org')
 ON CONFLICT (app_key) DO NOTHING;
