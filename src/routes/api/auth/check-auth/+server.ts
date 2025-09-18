@@ -2,7 +2,7 @@ import { refreshSession } from "$lib/server/auth";
 import { verifyAccessToken } from "$lib/server/jwt";
 import { json, type RequestHandler } from "@sveltejs/kit";
 
-export const POST: RequestHandler = async ({ request, cookies }) => {
+export const POST: RequestHandler = async ({ request }) => {
     // const refreshToken = cookies.get('nc_rt');
 
     const authHeader = request.headers.get('Authorization');
@@ -24,7 +24,8 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
                        email: payload.email,
                        role: payload.role,
                        sessionId: payload.sessionId
-                   }
+                   },
+                   accessToken: accessToken
                }, { status: 200 });
                
     } catch (err) { 
