@@ -2,8 +2,12 @@ import { refreshSession } from "$lib/server/auth";
 import { verifyAccessToken } from "$lib/server/jwt";
 import { json, type RequestHandler } from "@sveltejs/kit";
 
-export const POST: RequestHandler = async ({ cookies }) => {
-    const refreshToken = cookies.get('nc_rt');
+export const POST: RequestHandler = async ({ request, cookies }) => {
+    // const refreshToken = cookies.get('nc_rt');
+
+    const authHeader = request.headers.get('Authorization');
+    const refreshToken = authHeader?.replace('Bearer ', '');
+    
 
     if (!refreshToken) {
         return json({ authenticated: false, code:"R10" }, { status: 401 });
