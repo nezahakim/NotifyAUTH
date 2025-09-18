@@ -24,7 +24,7 @@ export const POST: RequestHandler = async ({ request }) => {
         return json({ user: user }, { status: 200 });
         
     } catch( error: any ){
-        return json({ message: "Server Error - DUND25" }, {status: 500 });
+        return json({ message: error || "Server Error - DUND25" }, {status: 500 });
     }
 
 }
