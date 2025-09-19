@@ -101,8 +101,8 @@ export const getAllApps = async () =>{
 
 export const get_user_profile = async (user_id: string) => {
 
-  const { data: user, error } = await supabase.from('user_profiles')
-  .select("user_id, username, full_name, avatar_url, bio, website_url, location")
+  const { data: user, error } = await supabase.from('user_profile_complete')
+  .select("user_id, username, full_name, email, avatar_url, bio, website_url, location")
   .eq("user_id", user_id)
   .single()
 
