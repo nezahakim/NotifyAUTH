@@ -106,7 +106,7 @@ export const get_user_profile = async (user_id: string) => {
   .eq("user_id", user_id)
   .single()
 
-  if (error || !user) throw new Error('Invalid or expired user Id')
+  if (error || !user) throw new Error(error?.message || 'Invalid or Expired ID');
 
   return user;
 }
