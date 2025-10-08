@@ -150,13 +150,18 @@ export async function sendMagicLink(
 
 	// 🟢 1. Try Resend
 	try {
-		await resend.emails.send({
+		const { data, error } = await resend.emails.send({
 			from: EMAIL_FROM,
 			to: email,
 			subject,
 			html
 		});
-		console.log('Email sent via Resend');
+
+		if (error) {
+			return console.error({ error });
+		}
+		
+		console.log('Email sent via Resend',{ data });
 		return;
 	} catch (err) {
 		console.error('Resend failed:', err);
