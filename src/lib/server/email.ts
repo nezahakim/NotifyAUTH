@@ -170,7 +170,7 @@ export async function sendMagicLink(
 			subject,
 			html
 		});
-		console.log('Email sent via Brevo (fallback)');
+		console.log('Email sent via Brevo ');
 	} catch (smtpErr) {
 		console.error('Brevo fallback failed:', smtpErr);
 		throw new Error('Both Resend and Brevo failed to send email.');
