@@ -136,11 +136,12 @@
           <!-- Email Step -->
           <div class="mb-16 md:mb-20">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-light text-black mb-8 md:mb-12 leading-none tracking-tight">
-              Verify Your Email
+              Verify Your Email 
             </h1>
             
             <p class="text-lg md:text-xl text-gray-600 mb-16 md:mb-20 leading-relaxed font-normal">
-              We'll send you a verification link to make sure it's really you.
+              We'll send you a verification link to make sure it's really you.{'\n'}
+              <span class="text-sm text-green-400 p-2"> Tip: If not found, Check in Spam.</span>
             </p>
           </div>
   
