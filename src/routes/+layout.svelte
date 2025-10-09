@@ -7,6 +7,7 @@
 
 <svelte:head>
 	<link rel="icon" href={logo} />
+	<title>NotifyAuth</title>
 </svelte:head>
 
 {@render children?.()}
