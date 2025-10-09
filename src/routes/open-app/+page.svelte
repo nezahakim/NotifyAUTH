@@ -16,11 +16,9 @@
   </script>
 
   <main class="flex justify-center items-center h-screen">
-    <button onclick={() => {
-        window.location.href = deepLink
-      }} class=" bg-green-500 text-xl text-amber-100 font-bold rounded-full py-4 px-6 ">
+    <a href={deepLink} class=" bg-green-500 text-xl text-amber-100 font-bold rounded-full py-4 px-6 ">
         Open in App
-    </button>
+    </a>
   </main>
 
 
