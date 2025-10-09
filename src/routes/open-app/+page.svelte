@@ -1,6 +1,17 @@
 <script lang="ts">
-    const token = new URLSearchParams(window.location.search).get('token') as string;
-    const deepLink = `deliveryplus://callback?token=${encodeURIComponent(token)}`;
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+
+    let deepLink = $state('')
+
+    onMount(()=>{
+        const token = new URLSearchParams(window.location.search).get('token') as string;
+        if(!token){
+            goto('/login');
+        }
+        deepLink = `deliveryplus://callback?token=${encodeURIComponent(token)}`;
+    })
+    
 
   </script>
 
