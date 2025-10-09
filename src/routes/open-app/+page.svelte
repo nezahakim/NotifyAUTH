@@ -15,7 +15,7 @@
 
   </script>
 
-  <main class="flex-1 justify-center items-center">
+  <main class="flex justify-center items-center h-screen">
     <button onclick={() => {
         window.location.href = deepLink
       }} class=" bg-green-500 text-xl text-amber-100 font-bold rounded-full py-4 px-6 ">
