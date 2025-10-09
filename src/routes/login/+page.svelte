@@ -40,7 +40,13 @@ async function handleLogin(e: any) {
         authStore.login(data.user, data.accessToken);
 
         if (redirect) {
+          
+          if(redirect == 'deliveryplus://callback'){
+            window.location.href = 'https://auth.notifycode.org/open-app?token='+encodeURIComponent(data.accessToken)
+          }else{
             window.location.href = `${redirect}?token=${encodeURIComponent(data.accessToken)}`;
+          }
+
         } else {
             goto('/dashboard');
         }
