@@ -48,7 +48,7 @@ async function handleLogin(e: any) {
           }
 
         } else {
-            goto('/dashboard');
+            goto('https://account.notifycode.org');
         }
     } catch (err: any) {
         error = err.message;
@@ -192,7 +192,7 @@ async function handleMagicLink(e: any) {
     <div class="mt-16 md:mt-20 text-left">
       <p class="text-gray-500 text-base md:text-lg px-3 py-.5 ">
           Don't have an account? 
-          <a href={`${has_redirect ? '/register?redirect='+redirect:'/register' }`} class="text-gray-800 hover:text-black transition-colors duration-200 font-medium">
+          <a href={`${has_redirect ? '/register?redirect='+redirect : '/register'}`} class="text-gray-800 hover:text-black transition-colors duration-200 font-medium">
             Sign up
           </a>
       </p>

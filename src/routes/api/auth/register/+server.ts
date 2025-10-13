@@ -94,6 +94,7 @@ export const POST: RequestHandler = async ({ request, cookies, getClientAddress 
         email: user.email,
         role: user.role
       },
+      refresh_token: session.refreshToken,
       accessToken: session.accessToken
     });
   } catch (error: any) {

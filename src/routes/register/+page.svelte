@@ -1,14 +1,15 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
-      import { registerStore } from "$lib/stores/helper";
-      import { onMount } from "svelte";
+    import { registerStore } from "$lib/stores/helper";
+    import { onMount } from "svelte";
   
       let email = $state('');
       let password = $state('');
       let confirmPassword = $state('');
     
       let emailVerified = $derived<boolean>($registerStore.isEmailVerified);
+      let redirect = $state<any | string>('');
   
       let codeSent = $state(false);
       let loading = $state(false);
@@ -92,8 +93,19 @@
                 throw new Error(message);
           }
 
+          const data = await res.json()
+
           success = 'Registration successful!';
-          goto('/dashboard');
+
+          const params = new URLSearchParams(window.location.search);
+          redirect = params.get('redirect') as string;
+
+        if (redirect) {
+          goto(`https://account.notifycode.org/setup?redirect=${redirect}`)
+        } else {
+          goto('https://account.notifycode.org');
+        }
+
 
         } catch (err: any) {
           error = err.message || 'Something went wrong.';
