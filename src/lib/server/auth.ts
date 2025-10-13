@@ -277,7 +277,7 @@ export async function refreshSession(refreshToken: string) {
     await supabase
         .from('auth_sessions')
         .update({
-            access_token_hash: crypto.createHash('sha256').update(accessToken).digest('hex')
+            access_token_hash: hashToken(accessToken)
         })
         .eq('id', session.id);
 
@@ -289,4 +289,9 @@ export async function logout(sessionId: string) {
         .from('auth_sessions')
         .update({ is_active: false })
         .eq('id', sessionId);
+}
+
+
+const hashToken = (token: string) => {
+    return crypto.createHash('sha256').update(token).digest('hex');
 }
