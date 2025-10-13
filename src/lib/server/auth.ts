@@ -132,11 +132,59 @@ export async function verifyMagicLink(token: string) {
     };
 }
 
+// export async function createSession(userId: string, ipAddress?: string, userAgent?: string) {
+//     const refreshToken = generateRefreshToken();
+//     const sessionId = crypto.randomUUID();
+
+//     // Get user data for token
+//     const { data: user } = await supabase
+//         .from('auth_users')
+//         .select('email, role')
+//         .eq('id', userId)
+//         .single();
+
+//     if (!user) throw new Error('User not found');
+
+//     // Create access token
+//     const accessToken = generateAccessToken({
+//         sub: userId,
+//         email: user.email,
+//         role: user.role,
+//         sessionId
+//     });
+
+//     // Store session
+//     const expiresAt = new Date();
+//     expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
+
+//     const { data: session, error } = await supabase
+//         .from('auth_sessions')
+//         .insert({
+//             id: sessionId,
+//             user_id: userId,
+//             refresh_token: refreshToken,
+//             access_token_hash: crypto.createHash('sha256').update(accessToken).digest('hex'),
+//             expires_at: expiresAt.toISOString(),
+//             ip_address: ipAddress,
+//             user_agent: userAgent
+//         })
+//         .select()
+//         .single();
+
+//     if (error) throw error;
+
+//     return {
+//         accessToken,
+//         refreshToken,
+//         sessionId: session.id
+//     };
+// }
+
 export async function createSession(userId: string, ipAddress?: string, userAgent?: string) {
     const refreshToken = generateRefreshToken();
     const sessionId = crypto.randomUUID();
 
-    // Get user data for token
+    // 1. Get user info
     const { data: user } = await supabase
         .from('auth_users')
         .select('email, role')
@@ -145,7 +193,30 @@ export async function createSession(userId: string, ipAddress?: string, userAgen
 
     if (!user) throw new Error('User not found');
 
-    // Create access token
+    // 2. Enforce max 3 active sessions
+    const { data: existingSessions, error: sessionFetchError } = await supabase
+        .from('auth_sessions')
+        .select('id, created_at')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: true }); // oldest first
+
+    if (sessionFetchError) throw sessionFetchError;
+
+    if (existingSessions && existingSessions.length >= 3) {
+        const sessionsToDelete = existingSessions
+            .slice(0, existingSessions.length - 2); // delete all but the 2 most recent
+
+        const idsToDelete = sessionsToDelete.map(s => s.id);
+
+        const { error: deleteError } = await supabase
+            .from('auth_sessions')
+            .delete()
+            .in('id', idsToDelete);
+
+        if (deleteError) throw deleteError;
+    }
+
+    // 3. Create new access token
     const accessToken = generateAccessToken({
         sub: userId,
         email: user.email,
@@ -153,11 +224,11 @@ export async function createSession(userId: string, ipAddress?: string, userAgen
         sessionId
     });
 
-    // Store session
+    // 4. Store new session
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
 
-    const { data: session, error } = await supabase
+    const { data: session, error: insertError } = await supabase
         .from('auth_sessions')
         .insert({
             id: sessionId,
@@ -171,7 +242,7 @@ export async function createSession(userId: string, ipAddress?: string, userAgen
         .select()
         .single();
 
-    if (error) throw error;
+    if (insertError) throw insertError;
 
     return {
         accessToken,

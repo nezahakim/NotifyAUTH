@@ -39,6 +39,7 @@ export const POST: RequestHandler = async ({ request, cookies, getClientAddress 
                 email: result.user.email,
                 role: result.user.role
             },
+            refresh_token: result.session.refreshToken,
             accessToken: result.session.accessToken
         });
     } catch (error:any) {

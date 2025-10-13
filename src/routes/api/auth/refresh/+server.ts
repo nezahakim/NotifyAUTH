@@ -11,7 +11,6 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
     
     
     if (!tobe_used){
-        console.error({ error: 'Unauthorized - attempt detected' })
         return json({ error: 'Unauthorized - attempt detected' }, { status: 401 });
     }
 

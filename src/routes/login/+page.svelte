@@ -42,9 +42,9 @@ async function handleLogin(e: any) {
         if (redirect) {
           
           if(redirect == 'deliveryplus://callback'){
-            window.location.href = 'https://auth.notifycode.org/open-app?token='+encodeURIComponent(data.accessToken)
+            window.location.href = 'https://auth.notifycode.org/open-app?token='+encodeURIComponent(data.refresh_token);
           }else{
-            window.location.href = `${redirect}?token=${encodeURIComponent(data.accessToken)}`;
+            window.location.href = `${redirect}?token=${encodeURIComponent(data.refresh_token)}`;
           }
 
         } else {
