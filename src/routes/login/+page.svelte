@@ -48,7 +48,7 @@ async function handleLogin(e: any) {
           }
 
         } else {
-            goto('https://account.notifycode.org');
+          window.location.href = 'https://account.notifycode.org';
         }
     } catch (err: any) {
         error = err.message;
