@@ -11,6 +11,7 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
     
     
     if (!tobe_used){
+        console.error({ error: 'Unauthorized - attempt detected' })
         return json({ error: 'Unauthorized - attempt detected' }, { status: 401 });
     }
 
@@ -21,6 +22,8 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
 
     } catch (error) {
         cookies.delete('nc_rt', { path: '/' });
+
+        console.error('Error refreshing session:', error);
         return json({ error: 'Invalid CRT01' }, { status: 401 });
     }
 };
