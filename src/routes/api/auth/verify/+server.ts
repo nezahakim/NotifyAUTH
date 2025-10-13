@@ -6,6 +6,7 @@ export const GET: RequestHandler = async ({ request }) => {
     const token = authHeader?.replace('Bearer ', '');
     
     if (!token) {
+        console.log("No token")
         return json({ valid: false, error: 'No token provided' }, { status: 401 });
     }
     
@@ -23,6 +24,7 @@ export const GET: RequestHandler = async ({ request }) => {
         }, { status: 200 });
         
     } catch (error: any) {
+        console.log(error)
         return json({ valid: false, error: 'Invalid token' }, { status: 401 });
     }
 };
