@@ -1,7 +1,7 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { verifyAccessToken } from '$lib/server/jwt';
 
-export const GET: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request }) => {
     const authHeader = request.headers.get('Authorization');
     const token = authHeader?.replace('Bearer ', '');
     
