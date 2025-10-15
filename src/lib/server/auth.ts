@@ -234,7 +234,7 @@ export async function createSession(userId: string, ipAddress?: string, userAgen
             id: sessionId,
             user_id: userId,
             refresh_token: refreshToken,
-            access_token_hash: crypto.createHash('sha256').update(accessToken).digest('hex'),
+            access_token_hash:hashToken(accessToken),
             expires_at: expiresAt.toISOString(),
             ip_address: ipAddress,
             user_agent: userAgent

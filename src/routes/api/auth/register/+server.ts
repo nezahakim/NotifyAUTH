@@ -57,6 +57,8 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { registerUser, createSession } from '$lib/server/auth';
 import { validateRegisterInput } from '$lib/utils/validation';
+import { hashToken } from '@notifycode/hash-it';
+import { HASH_IT_KEY } from '$env/static/private';
 
 export const POST: RequestHandler = async ({ request, cookies, getClientAddress }) => {
   try {
@@ -80,13 +82,34 @@ export const POST: RequestHandler = async ({ request, cookies, getClientAddress 
     const userAgent = request.headers.get('user-agent') ?? undefined;
     const session = await createSession(user.id, ip, userAgent);
 
-    cookies.set('refresh_token', session.refreshToken, {
+    const hashedRefToken = hashToken({
+      token: session.refreshToken,
+      key: HASH_IT_KEY
+    })
+
+    const hashedAccToken = hashToken({
+      token: session.accessToken,
+      key: HASH_IT_KEY
+    })
+
+    // Set refresh token as secure cookie
+    cookies.set('nc_rt', hashedRefToken, {
       path: '/',
       httpOnly: true,
       secure: true,
-      sameSite: 'strict',
+      sameSite: 'none',
+      domain:'.notifycode.org',
+      maxAge: 60 * 60 * 24 * 30
+  });
+
+  cookies.set('nc_at', hashedAccToken, {
+      path: '/',
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      domain:'.notifycode.org',
       maxAge: 60 * 60 * 24 * 7
-    });
+  })
 
     return json({
       user: {
@@ -94,9 +117,10 @@ export const POST: RequestHandler = async ({ request, cookies, getClientAddress 
         email: user.email,
         role: user.role
       },
-      refresh_token: session.refreshToken,
-      accessToken: session.accessToken
+      refresh_token: hashedRefToken,
+      accessToken: hashedAccToken
     });
+
   } catch (error: any) {
     console.error(error);
     return json({ error: error?.message ?? 'Unknown error occurred' }, { status: 500 });

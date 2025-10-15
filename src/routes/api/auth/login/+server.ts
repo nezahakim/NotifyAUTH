@@ -1,8 +1,9 @@
-// src/routes/api/auth/login/+server.ts
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { loginWithPassword } from '$lib/server/auth';
 import { checkRateLimit } from '$lib/server/rate-limit';
+import { hashToken } from "@notifycode/hash-it"
+import { HASH_IT_KEY } from '$env/static/private';
 
 export const POST: RequestHandler = async ({ request, cookies, getClientAddress }) => {
     const ip = getClientAddress();
@@ -22,15 +23,34 @@ export const POST: RequestHandler = async ({ request, cookies, getClientAddress 
         const userAgent = request.headers.get('user-agent') || undefined;
         const result = await loginWithPassword(email, password, ip, userAgent);
 
+        const hashedRefToken = hashToken({
+            token: result.session.refreshToken,
+            key: HASH_IT_KEY
+        });
+
+        const hashedAccToken = hashToken({
+            token: result.session.accessToken,
+            key: HASH_IT_KEY
+        });
+
         // Set refresh token as secure cookie
-        cookies.set('nc_rt', result.session.refreshToken, {
+        cookies.set('nc_rt', hashedRefToken, {
+            path: '/',
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            domain:'.notifycode.org',
+            maxAge: 60 * 60 * 24 * 30
+        });
+
+        cookies.set('nc_at', hashedAccToken, {
             path: '/',
             httpOnly: true,
             secure: true,
             sameSite: 'none',
             domain:'.notifycode.org',
             maxAge: 60 * 60 * 24 * 7
-        });
+        })
         
 
         return json({
@@ -39,8 +59,8 @@ export const POST: RequestHandler = async ({ request, cookies, getClientAddress 
                 email: result.user.email,
                 role: result.user.role
             },
-            refresh_token: result.session.refreshToken,
-            accessToken: result.session.accessToken
+            refresh_token: hashedRefToken,
+            accessToken: hashedAccToken
         });
     } catch (error:any) {
         return json({ error: error.message }, { status: 401 });
