@@ -22,7 +22,7 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
     
     
     if (!tobe_used){
-        return json({ error: 'Unauthorized - attempt detected' }, { status: 401 });
+        return json({ error: 'Unauthorized - attempt detected AUTH_ERROR_TBT' }, { status: 401 });
     }
 
     try {
