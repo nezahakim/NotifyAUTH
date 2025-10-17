@@ -1,15 +1,29 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { refreshSession } from '$lib/server/auth';
 import { decodeHashedToken, hashToken } from '@notifycode/hash-it';
-import { HASH_IT_KEY } from '$env/static/private';
+import { HASH_IT_KEY, MOBILE_REQUEST_KEY } from '$env/static/private';
 
 export const POST: RequestHandler = async ({ cookies, request }) => {
     const refreshToken = cookies.get('nc_rt');
     let decodedRefToken;
+    let tokenTobeUsed;
 
     const authHeader = request.headers.get('Authorization');
     const token = authHeader?.replace('Bearer ', '');
+    const body = await request.json();
 
+    if(body && token){
+        const { mobile_request, key } = body;
+
+        if (mobile_request && key == MOBILE_REQUEST_KEY){
+            tokenTobeUsed = decodeHashedToken({
+                token: token,
+                key: HASH_IT_KEY
+            })
+        }else{
+            tokenTobeUsed = token;
+        }
+    }
 
     if(refreshToken){
         decodedRefToken = decodeHashedToken({
@@ -18,7 +32,7 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
         })
     }
 
-    const tobe_used = decodedRefToken || token;
+    const tobe_used = decodedRefToken || tokenTobeUsed;
     
     
     if (!tobe_used){
