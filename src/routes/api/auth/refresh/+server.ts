@@ -4,55 +4,59 @@ import { decodeHashedToken, hashToken } from '@notifycode/hash-it';
 import { HASH_IT_KEY, MOBILE_REQUEST_KEY } from '$env/static/private';
 
 export const POST: RequestHandler = async ({ cookies, request }) => {
-    const refreshToken = cookies.get('nc_rt');
-    let decodedRefToken;
-    let tokenTobeUsed;
+	const refreshToken = cookies.get('nc_rt');
+	let decodedRefToken;
 
-    const authHeader = request.headers.get('Authorization');
-    const token = authHeader?.replace('Bearer ', '');
-    const body = await request.json();
+	const authHeader = request.headers.get('Authorization');
+	const token = authHeader?.replace('Bearer ', '');
+	const body = await request.json();
 
-    if(body && token){
-        const { mobile_request, key } = body;
+	let tokenToBeUsed;
 
-        if (mobile_request && key == MOBILE_REQUEST_KEY){
-            tokenTobeUsed = decodeHashedToken({
-                token: token,
-                key: HASH_IT_KEY
-            })
-        }else{
-            tokenTobeUsed = token;
-        }
-    }
+	if (body && token) {
+		const { mobile_request, key } = body;
 
-    if(refreshToken){
-        decodedRefToken = decodeHashedToken({
-            token: refreshToken,
-            key: HASH_IT_KEY
-        })
-    }
+		const shouldDecode = mobile_request && key === MOBILE_REQUEST_KEY;
 
-    const tobe_used = decodedRefToken || tokenTobeUsed;
-    
-    
-    if (!tobe_used){
-        return json({ error: 'Unauthorized - attempt detected AUTH_ERROR_TBT' }, { status: 401 });
-    }
+		if (shouldDecode) {
+			try {
+				tokenToBeUsed = decodeHashedToken({
+					token,
+					key: HASH_IT_KEY
+				});
+			} catch (err) {
+				console.error('Failed to decode hashed token:', err);
+			}
+		} else {
+			tokenToBeUsed = token;
+		}
+	}
 
-    try {
-        
-        const { accessToken } = await refreshSession(tobe_used);
-        const hashedAccToken = hashToken({ 
-            token: accessToken,
-            key: HASH_IT_KEY
-        });
-        
-        return json({ accessToken: hashedAccToken });
+	if (refreshToken) {
+		decodedRefToken = decodeHashedToken({
+			token: refreshToken,
+			key: HASH_IT_KEY
+		});
+	}
 
-    } catch (error) {
-        cookies.delete('nc_rt', { path: '/' });
+	const tobe_used = decodedRefToken || tokenToBeUsed;
 
-        console.error('Error refreshing session:', error);
-        return json({ error: 'Invalid CRT01' }, { status: 401 });
-    }
+	if (!tobe_used) {
+		return json({ error: 'Unauthorized - attempt detected AUTH_ERROR_TBT' }, { status: 401 });
+	}
+
+	try {
+		const { accessToken } = await refreshSession(tobe_used);
+		const hashedAccToken = hashToken({
+			token: accessToken,
+			key: HASH_IT_KEY
+		});
+
+		return json({ accessToken: hashedAccToken });
+	} catch (error) {
+		cookies.delete('nc_rt', { path: '/' });
+
+		console.error('Error refreshing session:', error);
+		return json({ error: 'Invalid CRT01' }, { status: 401 });
+	}
 };
