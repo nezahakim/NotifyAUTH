@@ -37,7 +37,7 @@
 		"vite": "^7.1.10"
 	},
 	"dependencies": {
-		"@notifycode/hash-it": "^0.0.5",
+		"@notifycode/hash-it": "^0.0.6",
 		"@supabase/supabase-js": "^2.75.0",
 		"bcryptjs": "^3.0.2",
 		"jsonwebtoken": "^9.0.2",
