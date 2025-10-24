@@ -9,16 +9,16 @@
         if(!token){
             goto('/login');
         }
-        deepLink = `deliveryplus://delivery.notifycode.org/callback?token=${encodeURIComponent(token)}`;
+        deepLink = `deliveryplus://callback?token=${encodeURIComponent(token)}`;
     })
 
   </script>
 
-  <main class="flex justify-center items-center h-screen">
+<main class="flex justify-center items-center h-screen">
     <a href={deepLink} class=" bg-green-500 text-xl text-amber-100 font-bold rounded-full py-4 px-6 ">
         Back to App
     </a>
-  </main>
+</main>
 
 
   
