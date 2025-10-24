@@ -9,7 +9,7 @@
         if(!token){
             goto('/login');
         }
-        deepLink = `deliveryplus://callback?token=${encodeURIComponent(token)}`;
+        deepLink = `deliveryplus://delivery.notifycode.org/callback?token=${encodeURIComponent(token)}`;
     })
 
   </script>
