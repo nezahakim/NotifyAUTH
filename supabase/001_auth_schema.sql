@@ -35,7 +35,7 @@ CREATE TABLE user_profiles (
 
 CREATE TABLE sso_applications (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    app_key VARCHAR(100) UNIQUE NOT NULL, -- e.g., 'gmail', 'collab', 'youtube', 'analytics'
+    app_key VARCHAR(100) UNIQUE NOT NULL,
     app_name VARCHAR(200) NOT NULL,
     app_description TEXT,
     app_url TEXT,
@@ -82,6 +82,70 @@ CREATE TABLE auth_magic_links (
     used_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     purpose VARCHAR(50) DEFAULT 'login' -- 'login' or 'reset_password'
+);
+
+
+CREATE TABLE providers (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    provider_name VARCHAR(100) UNIQUE NOT NULL,
+    provider_description TEXT,
+    owner_id UUID NOT NULL REFERENCES auth_users(id) ON DELETE CASCADE,
+    phone VARCHAR(20),
+    address_text TEXT,
+    cover_image_url TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE products (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    provider_id UUID NOT NULL REFERENCES providers(id) ON DELETE CASCADE,
+    product_name VARCHAR(200) NOT NULL,
+    product_description TEXT,
+    unit_price NUMERIC(10, 2) NOT NULL,
+    image_url TEXT,
+    delivery_fee NUMERIC(10, 2) DEFAULT 0,
+    currency VARCHAR(10) DEFAULT 'RWF',
+    stock_quantity INT NOT NULL DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+
+CREATE TABLE orders (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES auth_users(id) ON DELETE CASCADE,
+    total_price NUMERIC(10, 2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'pending', -- 'pending', 'confirmed', 'delivered', 'cancelled'
+    delivery_address TEXT,
+    placed_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE order_items (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    quantity INT NOT NULL,
+    unit_price NUMERIC(10, 2) NOT NULL,
+    total_price NUMERIC(10, 2) NOT NULL
+);
+
+
+create table addresses (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id uuid references auth_users(id) on delete cascade,
+  label text, -- e.g. "Home", "Work"
+  street text,
+  city text,
+  state text,
+  zip text,
+  country text,
+  lat double precision,
+  lng double precision,
+  delivery_notes text,
+  created_at timestamp default now()
 );
 
 
@@ -225,5 +289,6 @@ VALUES
   ('nezaai', 'NezaAI', 'Notifycode AI Research', 'https://ai.notifycode.org'),
   ('account', 'NotifyAccount', 'Account Management plt', 'https://account.notifycode.org'),
   ('auth', 'NotifyAUTH+', 'Authentication plt', 'https://auth.notifycode.org'),
+  ('market', 'NotifyMarket+', 'Market plt', 'https://market.notifycode.org'),
   ('blog', 'NotifyBlog', 'Blog Plt', 'https://blog.notifycode.org')
 ON CONFLICT (app_key) DO NOTHING;
